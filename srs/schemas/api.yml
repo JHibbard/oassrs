@@ -1,0 +1,78 @@
+openapi: "3.0.0"
+
+info:
+  title: Schema Registry Server
+  description: SRS is a REST API for storing and retreiving OpenAPI 3 compliant REST schemas.
+  version: "1.0"
+
+servers:
+  - url: http://localhost:9090/v1.0
+
+paths:
+  /schemas:
+    post:
+      tags:
+        - schemas
+      summary: 'Add schemas'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schemas'
+      operationId: srs.post_schemas
+      responses:
+        201:
+          description: 'Created'
+    get:
+      tags:
+        - schemas
+      summary: 'Get schemas'
+      parameters:
+        - name: operationId
+          in: query
+          schema:
+            $ref: '#/components/schemas/Schema'
+          description: ''
+      operationId: srs.get_schemas
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schemas'
+  /schemas/merge:
+    post:
+      tags:
+        - schemas
+      summary: 'Merge schemas'
+      parameters:
+        - name: operationIds
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+          description: ''
+      operationId: srs.post_merge
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        operationId:
+          type: string
+        schema:
+          type: object
+    Schemas:
+      type: array
+      items:
+        $ref: '#/components/schemas/Schema'
